@@ -1,0 +1,57 @@
+import pandas as pd
+import os
+
+# Creating necessary directories
+os.makedirs("data/processed", exist_ok=True)
+
+# Define dataset
+data = pd.DataFrame({
+    "Height": [65.8, 71.5, 69.4, 68.2, 67.8, 68.7, 69.8, 70.1, 67.9, 66.8],
+    "Weight": [112, 136, 153, 142, 144, 123, 141, 136, 112, 120],
+    "Age": [30, 19, 45, 22, 29, 50, 51, 23, 17, 39],
+    "Grip Strength": [30, 31, 29, 28, 24, 26, 22, 20, 19, 31],
+    "Frailty": ["N", "N", "N", "Y", "Y", "N", "Y", "Y", "N", "N"]
+})
+
+# Convert Frailty to binary (N=0, Y=1)
+data["Frailty"] = data["Frailty"].map({"N": 0, "Y": 1})
+
+# Save processed data
+data.to_csv("data/processed/frailty_data.csv", index=False)
+
+
+  import numpy as np
+import scipy.stats as stats
+
+# Compute statistics
+mean_grip = np.mean(data["Grip Strength"])
+std_dev = np.std(data["Grip Strength"])
+correlation, _ = stats.pearsonr(data["Grip Strength"], data["Frailty"])
+
+print(f"Mean Grip Strength: {mean_grip:.2f}")
+print(f"Standard Deviation: {std_dev:.2f}")
+print(f"Correlation between Grip Strength and Frailty: {correlation:.2f}")
+
+
+  import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Creating necessary directories
+os.makedirs("figures", exist_ok=True)
+
+# Scatter Plot
+plt.figure(figsize=(6,4))
+sns.scatterplot(x=data["Grip Strength"], y=data["Frailty"])
+plt.xlabel("Grip Strength (kg)")
+plt.ylabel("Frailty (1=Yes, 0=No)")
+plt.title("Grip Strength vs Frailty")
+plt.savefig("figures/scatter_frailty.png")
+plt.show()
+
+# Histogram
+plt.figure(figsize=(6,4))
+sns.histplot(data["Grip Strength"], bins=10, kde=True)
+plt.xlabel("Grip Strength (kg)")
+plt.title("Distribution of Grip Strength")
+plt.savefig("figures/histogram_grip.png")
+plt.show()
