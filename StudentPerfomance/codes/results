@@ -1,0 +1,56 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
+
+df = pd.read_csv("/content/StudentsPerformance.csv")
+print(df.head())  # Display first 5 rows
+
+  
+  # Create the 'figures' directory if it doesn't exist
+os.makedirs("figures", exist_ok=True)
+
+plt.figure(figsize=(8,4))
+sns.histplot(df["math score"], bins=10, kde=True, color="blue")
+plt.xlabel("Math Score")
+plt.title("Distribution of Math Scores")
+plt.savefig("figures/hist_math.png")
+plt.show()
+
+
+  plt.figure(figsize=(6,4))
+sns.scatterplot(x=df["math score"], y=df["writing score"])
+plt.xlabel("Math Score")
+plt.ylabel("Writing Score")
+plt.title("Math vs Writing Score")
+plt.savefig("figures/scatter_scores.png")
+plt.show()
+
+
+  plt.figure(figsize=(6,4))
+sns.boxplot(x=df["gender"], y=df["math score"])
+plt.xlabel("Gender")
+plt.ylabel("Math Score")
+plt.title("Math Scores by Gender")
+plt.savefig("figures/boxplot_gender.png")
+plt.show()
+
+
+  avg_scores = df[["math score", "reading score", "writing score"]].mean()
+
+plt.figure(figsize=(6,4))
+sns.barplot(x=avg_scores.index, y=avg_scores.values)
+plt.xlabel("Subjects")
+plt.ylabel("Average Score")
+plt.title("Average Scores by Subject")
+plt.savefig("figures/bar_avg_scores.png")
+plt.show()
+
+
+  numeric_df = df.select_dtypes(include=['number'])
+
+plt.figure(figsize=(6,4))
+sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Correlation Matrix")
+plt.savefig("figures/heatmap_corr.png")
+plt.show()
